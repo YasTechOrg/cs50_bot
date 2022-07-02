@@ -79,10 +79,20 @@ fun main(args: Array<String>)
 		{
 			"لغو" ->
 			{
-				bot.sendMessage(it.chat.id.toChatId(), "عملیات با موفقیت لغو شد!")
 				bot.deleteMessage(it.chat.id.toChatId(), msgID)
+				bot.sendMessage(it.chat.id.toChatId(), "عملیات با موفقیت لغو شد!")
+				bot.sendMessage(it.chat.id.toChatId(), "دستورات ربات :\n" +
+						"\n" +
+						"/start - شروع کار با ربات\n" +
+						"/help - راهنمای ربات\n" +
+						"/generate - ساخت تصویر نویسه جدید\n" +
+						"\n" +
+						"برای پشتیبانی بات با این ایمیل در تماس باشید : yastechorg@gmail.com")
 			}
-			"ویرایش اطلاعات" -> bot.jumpToAndFire("run", it)
+			"ویرایش اطلاعات" -> {
+				bot.deleteMessage(it.chat.id.toChatId(), msgID)
+				bot.jumpToAndFire("run", it)
+			}
 			"ساختن تصویر نوشته جدید!" -> bot.sendMessage(it.chat.id.toChatId(), "ساحته شد !")
 		}
 	}.build()
