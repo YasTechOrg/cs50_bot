@@ -32,6 +32,10 @@ tasks.withType<KotlinCompile> {
 	}
 }
 
+tasks.bootJar {
+	archiveFileName.set("cs50.jar")
+}
+
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
