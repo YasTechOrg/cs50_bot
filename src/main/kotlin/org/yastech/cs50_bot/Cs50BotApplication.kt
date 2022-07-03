@@ -11,6 +11,7 @@ import com.elbekd.bot.types.ReplyKeyboardMarkup
 import com.elbekd.bot.util.SendingByteArray
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.core.io.ClassPathResource
 import org.springframework.util.ResourceUtils
 import java.awt.*
 import java.awt.font.TextAttribute
@@ -229,7 +230,7 @@ fun main(args: Array<String>)
 				bot.sendMessage(it.chat.id.toChatId(), "در حال ساختن ...")
 
 				// Get Temp Image From Application Resources And Initialize It
-				val file = ResourceUtils.getFile("classpath:temp.jpeg")
+				val file = ClassPathResource("temp.jpeg").inputStream
 
 				// Initialize Final Byte Array Output Variable
 				val bos = ByteArrayOutputStream()
@@ -241,8 +242,8 @@ fun main(args: Array<String>)
 					run {
 
 						// Read Fonts From Application Resources And Create Custom Fonts
-						val nameFaFont = Font.createFont(Font.TRUETYPE_FONT, ResourceUtils.getFile("classpath:Dana-Black.ttf")).deriveFont(30.0f)
-						val nameEnFont = Font.createFont(Font.TRUETYPE_FONT, ResourceUtils.getFile("classpath:Gotham-Book.otf")).deriveFont(12.0f)
+						val nameFaFont = Font.createFont(Font.TRUETYPE_FONT, ClassPathResource("Dana-Black.ttf").inputStream).deriveFont(30.0f)
+						val nameEnFont = Font.createFont(Font.TRUETYPE_FONT, ClassPathResource("Gotham-Book.otf").inputStream).deriveFont(12.0f)
 
 						// Main Canvas
 						val g = ImageIO.read(file)
