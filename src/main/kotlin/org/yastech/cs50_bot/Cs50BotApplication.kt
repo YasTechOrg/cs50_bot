@@ -3,8 +3,10 @@ package org.yastech.cs50_bot
 import com.elbekd.bot.Bot
 import com.elbekd.bot.feature.chain.chain
 import com.elbekd.bot.feature.chain.jumpToAndFire
+import com.elbekd.bot.feature.chain.terminateChain
 import com.elbekd.bot.model.toChatId
 import com.elbekd.bot.types.KeyboardButton
+import com.elbekd.bot.types.Message
 import com.elbekd.bot.types.ReplyKeyboardMarkup
 import com.elbekd.bot.util.SendingByteArray
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -64,6 +66,9 @@ fun main(args: Array<String>)
 	var nameEn = ""
 	var msgID = 0L
 
+	var profileState = "unset"
+	var profilePicture = URL("https://cs50x.ir/summer")
+
 	// Command Chain
 	bot.chain("/generate")
 	{
@@ -84,6 +89,103 @@ fun main(args: Array<String>)
 		// Set User Response
 		nameEn ="${it.text}"
 
+		// Check If Use Have Profile Picture
+		if(bot.getUserProfilePhotos(it.chat.id).photos.isNotEmpty())
+		{
+
+			// Set User Image State to "SELECTIVE"
+			profileState = "SELECTIVE"
+
+			// Ask User For Profile Picture
+			bot.sendMessage(it.chat.id.toChatId(), "عکس شما در تصویر نوشته چاپ می شود . کدام تصویر را انتخاب میکنید ؟",
+				replyMarkup = ReplyKeyboardMarkup( keyboard = listOf(
+					listOf(
+						KeyboardButton("عکس پروفایل"),
+						KeyboardButton("ارسال عکس"),
+					),
+					listOf(KeyboardButton("لغو"))
+
+				), oneTimeKeyboard = true /* Close After Click */ )
+
+			).let { msg -> msgID = msg.messageId /* Set Promise Message ID*/ }
+		}
+		else
+		{
+
+			// Set User Image State to "CUSTOM"
+			profileState = "CUSTOM"
+
+			// Send Get Picture Message
+			bot.sendMessage(it.chat.id.toChatId(), "لطفا عکسی میخواهید در تصویر نویسه چاپ شود را وارد کنید!")
+		}
+
+	}.then {
+
+		// If Profile State Is CUSTOM
+		if (profileState == "CUSTOM")
+		{
+
+			// Set Custom Picture Url
+			profilePicture = URL("https://api.telegram.org/file/bot$token/${bot.getFile(it.photo[0].fileId).filePath}")
+
+			// Jump To Final
+			bot.jumpToAndFire("final", it)
+		}
+
+		// If Profile State Is SELECTIVE
+		else
+		{
+			when(it.text)
+			{
+				// On Cancel
+				"لغو" ->
+				{
+					// Cancel Process
+					removeAction(bot, it, msgID)
+
+					// Terminate /generate chain
+					bot.terminateChain(it.chat.id)
+				}
+
+				// On Profile Picture
+				"عکس پروفایل" ->
+				{
+
+					// Set Profile State
+					profileState = "PROFILE_PIC"
+
+					// Set Profile Picture Url
+					profilePicture = URL(
+						"https://api.telegram.org/file/bot$token/${bot.getFile(bot.getUserProfilePhotos(it.chat.id).photos[0][0].fileId).filePath!!}"
+					)
+
+					// Jump To Final
+					bot.jumpToAndFire("final", it)
+				}
+
+				// On Custom Picture
+				"ارسال عکس" ->
+				{
+					// Set Profile State
+					profileState = "CUSTOM"
+
+					// Send Get Picture Message
+					bot.sendMessage(it.chat.id.toChatId(), "لطفا عکسی میخواهید در تصویر نویسه چاپ شود را وارد کنید!")
+				}
+			}
+		}
+	}.then {
+
+		// Check If Custom Image
+		if (profileState == "CUSTOM") profilePicture = URL(
+			"https://api.telegram.org/file/bot$token/${bot.getFile(it.photo[0].fileId).filePath}"
+		)
+
+		// Jump To Final
+		bot.jumpToAndFire("final", it)
+
+	}.then("final"){
+
 		// Get Data Promise From User
 		bot.sendMessage(it.chat.id.toChatId(), "نام فارسی : $nameFa\n" +
 				"نام انگلیسی : $nameEn\n" +
@@ -92,39 +194,19 @@ fun main(args: Array<String>)
 				KeyboardButton("لغو"),
 				KeyboardButton("ویرایش اطلاعات"),
 			),
-			listOf(
-				KeyboardButton("ساختن تصویر نوشته جدید!")
-			)
-		),
+			listOf(KeyboardButton("ساختن تصویر نوشته جدید!"))
 
-		// Close After Click
-		oneTimeKeyboard = true)
-		).let { msg ->
+		), oneTimeKeyboard = true /* Close After Click */ )
 
-			// Set Promise Message ID
-			msgID = msg.messageId
-		}
+		).let { msg -> msgID = msg.messageId /* Set Promise Message ID*/ }
+
 	}.then {
 
 		// Check User Response
 		when(it.text)
 		{
 			// On Cancel
-			"لغو" ->
-			{
-				// Remove Keyboard
-				bot.deleteMessage(it.chat.id.toChatId(), msgID)
-
-				// Show Cancel Response
-				bot.sendMessage(it.chat.id.toChatId(), "عملیات با موفقیت لغو شد!")
-				bot.sendMessage(it.chat.id.toChatId(), "دستورات ربات :\n" +
-						"\n" +
-						"/start - شروع کار با ربات\n" +
-						"/help - راهنمای ربات\n" +
-						"/generate - ساخت تصویر نویسه جدید\n" +
-						"\n" +
-						"برای پشتیبانی بات با این ایمیل در تماس باشید : yastechorg@gmail.com")
-			}
+			"لغو" -> removeAction(bot, it, msgID)
 
 			// On Edit Data
 			"ویرایش اطلاعات" -> {
@@ -166,9 +248,7 @@ fun main(args: Array<String>)
 						val g = ImageIO.read(file)
 
 						// Load User Profile Photo
-						val profilePhoto = ImageIO.read(
-							URL("https://api.telegram.org/file/bot$token/${bot.getFile(bot.getUserProfilePhotos(it.chat.id).photos[0][0].fileId).filePath!!}")
-						)
+						val profilePhoto = ImageIO.read(profilePicture)
 
 						// Create User Profile Photo Buffer Image
 						val profilePhotoOutput = BufferedImage(182, 182, BufferedImage.TYPE_INT_ARGB)
@@ -245,4 +325,23 @@ fun main(args: Array<String>)
 
 	// Start Bot
 	bot.start()
+}
+
+suspend fun removeAction(bot: Bot, message: Message, msgID: Long)
+{
+	// Set Chat ID
+	val chatId = message.chat.id.toChatId()
+
+	// Remove Keyboard
+	bot.deleteMessage(chatId, msgID)
+
+	// Show Cancel Response
+	bot.sendMessage(chatId, "عملیات با موفقیت لغو شد!")
+	bot.sendMessage(chatId, "دستورات ربات :\n" +
+			"\n" +
+			"/start - شروع کار با ربات\n" +
+			"/help - راهنمای ربات\n" +
+			"/generate - ساخت تصویر نویسه جدید\n" +
+			"\n" +
+			"برای پشتیبانی بات با این ایمیل در تماس باشید : yastechorg@gmail.com")
 }
