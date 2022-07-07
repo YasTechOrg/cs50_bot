@@ -39,14 +39,7 @@ fun main(args: Array<String>)
 
 	// Start Command
 	bot.onCommand("/start") { (msg, _)  ->
-		bot.sendMessage(msg.chat.id.toChatId(), "خوش آمدید!\n" +
-				"چه کمکی از من ساخته است ؟\n" +
-				"\n" +
-				"/start - شروع کار با ربات\n" +
-				"/help - راهنمای ربات\n" +
-				"/generate - ساخت تصویر نویسه جدید\n" +
-				"\n" +
-				"برای پشتیبانی بات با این ایمیل در تماس باشید : yastechorg@gmail.com")
+		bot.sendMessage(msg.chat.id.toChatId(), "جهت ساخت استوری اختصاصی با نام و عکس خود، دستور /generate را وارد کنید.")
 	}
 
 	// Help Command
@@ -195,7 +188,7 @@ fun main(args: Array<String>)
 				KeyboardButton("لغو"),
 				KeyboardButton("ویرایش اطلاعات"),
 			),
-			listOf(KeyboardButton("ساختن تصویر نوشته جدید!"))
+			listOf(KeyboardButton("تایید"))
 
 		), oneTimeKeyboard = true /* Close After Click */ )
 
@@ -220,7 +213,7 @@ fun main(args: Array<String>)
 			}
 
 			// On Create New Image
-			"ساختن تصویر نوشته جدید!" ->
+			"تایید" ->
 			{
 
 				// Remove Keyboard
