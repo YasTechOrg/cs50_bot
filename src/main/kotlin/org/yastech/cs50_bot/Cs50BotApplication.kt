@@ -230,7 +230,7 @@ fun main(args: Array<String>)
 				bot.sendMessage(it.chat.id.toChatId(), "در حال ساختن ...")
 
 				// Get Temp Image From Application Resources And Initialize It
-				val file = ClassPathResource("temp.jpeg").inputStream
+				val file = ClassPathResource("temp.jpg").inputStream
 
 				// Initialize Final Byte Array Output Variable
 				val bos = ByteArrayOutputStream()
@@ -241,9 +241,12 @@ fun main(args: Array<String>)
 					// Do Process In Blocking Context
 					run {
 
+						// Profile Picture Size
+						val profilePicSize = 948
+
 						// Read Fonts From Application Resources And Create Custom Fonts
-						val nameFaFont = Font.createFont(Font.TRUETYPE_FONT, ClassPathResource("Dana-Black.ttf").inputStream).deriveFont(30.0f)
-						val nameEnFont = Font.createFont(Font.TRUETYPE_FONT, ClassPathResource("Gotham-Book.otf").inputStream).deriveFont(12.0f)
+						val nameFaFont = Font.createFont(Font.TRUETYPE_FONT, ClassPathResource("Dana-Black.ttf").inputStream).deriveFont(160.0f)
+						val nameEnFont = Font.createFont(Font.TRUETYPE_FONT, ClassPathResource("Gotham-Book.otf").inputStream).deriveFont(80.0f)
 
 						// Main Canvas
 						val g = ImageIO.read(file)
@@ -252,7 +255,7 @@ fun main(args: Array<String>)
 						val profilePhoto = ImageIO.read(profilePicture)
 
 						// Create User Profile Photo Buffer Image
-						val profilePhotoOutput = BufferedImage(182, 182, BufferedImage.TYPE_INT_ARGB)
+						val profilePhotoOutput = BufferedImage(profilePicSize, profilePicSize, BufferedImage.TYPE_INT_ARGB)
 
 						// Create User Profile Photo Canvas
 						val g2 = profilePhotoOutput.createGraphics()
@@ -261,17 +264,17 @@ fun main(args: Array<String>)
 						g2.composite = AlphaComposite.Src
 						g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 						g2.color = Color.WHITE
-						g2.fill(RoundRectangle2D.Float(0f, 0f, 182f, 182f, 360f, 360f))
+						g2.fill(RoundRectangle2D.Float(0f, 0f, profilePicSize.toFloat(), profilePicSize.toFloat(), 1600f, 1600f))
 						g2.composite = AlphaComposite.SrcAtop
 
 						// Draw Profile Photo In Canvas
-						g2.drawImage(profilePhoto, 0, 0, 182, 182, null)
+						g2.drawImage(profilePhoto, 0, 0, profilePicSize, profilePicSize, null)
 
 						// Render Profile Photo Result
 						g2.dispose()
 
 						// Draw Profile Photo In Canvas
-						g.graphics.drawImage(profilePhotoOutput,136, 263,182, 182, null)
+						g.graphics.drawImage(profilePhotoOutput,678, 1055,profilePicSize, profilePicSize, null)
 
 						// Create New Attributed String And Pass Persian Name String
 						var attributedText = AttributedString(nameFa)
@@ -287,7 +290,7 @@ fun main(args: Array<String>)
 						var positionX: Int = (g.width - metrics.stringWidth(nameFa)) / 2
 
 						// Draw Persian Name With ( x : center , y : 490px )
-						g.graphics.drawString(attributedText.iterator, positionX, 490)
+						g.graphics.drawString(attributedText.iterator, positionX, 2220)
 
 
 						// Reinitialize Attributed String And Pass English Name String
@@ -304,7 +307,7 @@ fun main(args: Array<String>)
 						positionX = (g.width - metrics.stringWidth(nameEn)) / 2
 
 						// Draw English Name With ( x : center , y : 520px )
-						g.graphics.drawString(attributedText.iterator, positionX, 520)
+						g.graphics.drawString(attributedText.iterator, positionX, 2360)
 
 						// Render Main Canvas
 						g.graphics.dispose()
@@ -317,6 +320,7 @@ fun main(args: Array<String>)
 
 					// Finally Send Result Photo As ByteArray To User
 					bot.sendPhoto(it.chat.id.toChatId(), SendingByteArray(bos.toByteArray(), "${nameEn}.jpeg"))
+					bot.sendDocument(it.chat.id.toChatId(), SendingByteArray(bos.toByteArray(), "${nameEn}.jpeg"))
 				}
 			}
 		}
