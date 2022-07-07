@@ -84,7 +84,7 @@ fun main(args: Array<String>)
 
 		// Set User Response And Get User FullName In English
 		nameFa = "${it.text}"
-		bot.sendMessage(it.chat.id.toChatId(), "لطفا نام و نام خانوادگی خود را به انگلیسی وارد کنید!")
+		bot.sendMessage(it.chat.id.toChatId(), "حالا لطفا نام و نام خانوادگی خود را به انگلیسی وارد کنید!")
 	}.then {
 
 		// Set User Response
