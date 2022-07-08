@@ -4,6 +4,7 @@ import com.elbekd.bot.Bot
 import com.elbekd.bot.feature.chain.chain
 import com.elbekd.bot.feature.chain.jumpToAndFire
 import com.elbekd.bot.feature.chain.terminateChain
+import com.elbekd.bot.model.ChatId
 import com.elbekd.bot.model.toChatId
 import com.elbekd.bot.types.KeyboardButton
 import com.elbekd.bot.types.Message
@@ -32,7 +33,9 @@ fun main(args: Array<String>)
 	runApplication<Cs50BotApplication>(*args)
 
 	// Set Bot Token
-	val token = "5412773834:AAFBi28R150rMjbOXbdLizi_JPmG6Z4X0TU"
+	//val token = "5412773834:AAFBi28R150rMjbOXbdLizi_JPmG6Z4X0TU"
+//	val token = "5303949448:AAEFnKO2SkXD4J_0VjztntURBd2ojCYeYS8"
+	val token = "5496536134:AAG5PmNrbSJHzv7H7WrxRObojgvXFhVWRtM"
 
 	// Creat Bot
 	val bot = Bot.createPolling(token)
