@@ -7,7 +7,6 @@
 - [Our Contact Information](#contact)
 
 ### Deploy
-First make sure you set your token to `Cs50BotApplication.kt` file!<br>
 You can deploy project using docker and docker-compose!<br>
 
 First create a `docker-compose.yaml`
@@ -24,9 +23,10 @@ After that, clone the project using git
 ```shell
 git clone https://github.com/YasTechOrg/cs50_bot
 ```
-Finally, you can build and deploy project using docker compose
+Finally, you can build and deploy project using docker compose<br>
+Don't forget to change `{TOKEN}` with your own telegram bot token!
 ```shell
-docker-compose up -d --build
+docker-compose up -d --build --build-arg TOKEN="{TOKEN}"
 ```
 ### Contact
 - Hossein Araghi
