@@ -24,9 +24,9 @@ After that, clone the project using git
 git clone https://github.com/YasTechOrg/cs50_bot
 ```
 Finally, you can build and deploy project using docker compose<br>
-Don't forget to change `{TOKEN}` with your own telegram bot token!
+Don't forget to set `token` args in your docker compose!
 ```shell
-docker-compose up -d --build --build-arg TOKEN="{TOKEN}"
+docker-compose up -d --build
 ```
 ### Contact
 - Hossein Araghi
