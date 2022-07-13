@@ -10,4 +10,4 @@ RUN gradle bootJar
 
 ARG token
 ENV token ${token}
-CMD ["java", "-jar", "build/libs/cs50.jar", "$token"]
+CMD java -jar build/libs/cs50.jar $token
