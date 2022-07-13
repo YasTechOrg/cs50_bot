@@ -8,4 +8,4 @@ COPY . /usr/src/cs50xiran_bot
 
 WORKDIR /usr/src/cs50xiran_bot
 RUN gradle bootJar
-CMD ["java", "-jar", "build/libs/cs50.jar", "${TOKEN}"]
+CMD ["java", "-jar", "build/libs/cs50.jar", "$TOKEN"]
