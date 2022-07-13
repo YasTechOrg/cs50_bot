@@ -4,18 +4,14 @@ import com.elbekd.bot.Bot
 import com.elbekd.bot.feature.chain.chain
 import com.elbekd.bot.feature.chain.jumpToAndFire
 import com.elbekd.bot.feature.chain.terminateChain
-import com.elbekd.bot.model.ChatId
 import com.elbekd.bot.model.toChatId
 import com.elbekd.bot.types.KeyboardButton
 import com.elbekd.bot.types.Message
-import java.util.Timer
-import kotlin.concurrent.schedule
 import com.elbekd.bot.types.ReplyKeyboardMarkup
 import com.elbekd.bot.util.SendingByteArray
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.core.io.ClassPathResource
-import org.springframework.util.ResourceUtils
 import java.awt.*
 import java.awt.font.TextAttribute
 import java.awt.geom.RoundRectangle2D
@@ -23,8 +19,9 @@ import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
 import java.net.URL
 import java.text.AttributedString
-import java.util.concurrent.CompletableFuture
+import java.util.*
 import javax.imageio.ImageIO
+import kotlin.concurrent.schedule
 
 
 @SpringBootApplication
@@ -36,10 +33,8 @@ fun main(args: Array<String>)
 	runApplication<Cs50BotApplication>(*args)
 
 	// Set Bot Token
-	//val token = "5412773834:AAFBi28R150rMjbOXbdLizi_JPmG6Z4X0TU"
-	//val token = "5303949448:AAEFnKO2SkXD4J_0VjztntURBd2ojCYeYS8"
-	//val token = "5496536134:AAG5PmNrbSJHzv7H7WrxRObojgvXFhVWRtM"
-	val token = "5480256246:AAGlNl141J3f_jqan-ZPIogA1s8fRosnjG4"
+	val token = args[0]
+	println("bot runs on token ${args[0]}")
 
 	// Creat Bot
 	val bot = Bot.createPolling(token)
