@@ -1,11 +1,13 @@
 FROM gradle:7.4.2-jdk18
 
 USER root
-ARG TOKEN
 
 RUN mkdir -p /usr/src/cs50xiran_bot
 COPY . /usr/src/cs50xiran_bot
 
 WORKDIR /usr/src/cs50xiran_bot
 RUN gradle bootJar
-CMD ["java", "-jar", "build/libs/cs50.jar", "$TOKEN"]
+
+ARG token
+ENV token ${token}
+CMD ["java", "-jar", "build/libs/cs50.jar", "$token"]
