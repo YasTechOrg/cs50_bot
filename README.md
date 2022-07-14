@@ -1,5 +1,5 @@
 # ![CS50x Iran](./assets/logo_v1.svg) Telegram Bot
-![RELEASE](https://img.shields.io/badge/RELEASE-v2.0.0-green)
+![RELEASE](https://img.shields.io/badge/RELEASE-v3.1.0-green)
 ![Tech](https://img.shields.io/badge/TECH-Kotlin,%20Spring%20Boot-orange)
 
 ### Navigation
@@ -7,7 +7,7 @@
 - [Our Contact Information](#contact)
 
 ### Deploy
-You can deploy project using docker and docker-compose!<br>
+You can deploy projectstablity using docker and docker-compose!<br>
 
 First create a `docker-compose.yaml`
 ```yaml
